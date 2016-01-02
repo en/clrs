@@ -15,7 +15,6 @@ func recursiveLinearSearch(a []int, v, n int) int {
 	}
 	if n == 0 {
 		return -1
-	} else {
-		return recursiveLinearSearch(a, v, n-1)
 	}
+	return recursiveLinearSearch(a, v, n-1)
 }
