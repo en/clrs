@@ -28,7 +28,7 @@ func heapIncreaseKey(h *heap, i, key int) error {
 	for i > 0 && h.a[parent(i)] < h.a[i] {
 		p := parent(i)
 		h.a[i], h.a[p] = h.a[p], h.a[i]
-		i = parent(i)
+		i = p
 	}
 	return nil
 }
