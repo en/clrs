@@ -78,7 +78,7 @@ func TestYoungTableauSort(t *testing.T) {
 	for i := 0; i < 9; i++ {
 		yt.insert(cell{a[i], false})
 	}
-	got := make([]int, 0)
+	var got []int
 	for i := 0; i < 9; i++ {
 		c, err := yt.extractMin()
 		if err == nil {
