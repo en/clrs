@@ -16,5 +16,4 @@ func TestRadixSort(t *testing.T) {
 		t.Errorf("   got %v", in)
 		t.Errorf("  want %v", want)
 	}
-
 }
