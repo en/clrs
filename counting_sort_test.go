@@ -25,3 +25,26 @@ func TestCountingSort(t *testing.T) {
 		}
 	}
 }
+
+func TestCountingSortOnDigit(t *testing.T) {
+	a := []int{329, 457, 657, 839, 436, 720, 355}
+	k := 9
+	cases := []struct {
+		d    int
+		want []int
+	}{
+		{1, []int{720, 355, 436, 457, 657, 329, 839}},
+		{2, []int{329, 720, 839, 436, 457, 657, 355}},
+		{3, []int{329, 355, 457, 436, 657, 720, 839}},
+	}
+
+	for _, c := range cases {
+		b := make([]int, len(a))
+		countingSortOnDigit(a, b, k, c.d)
+		if !reflect.DeepEqual(b, c.want) {
+			t.Errorf("sorted %v on digit %v", a, c.d)
+			t.Errorf("   got %v", b)
+			t.Errorf("  want %v", c.want)
+		}
+	}
+}
