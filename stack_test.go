@@ -16,9 +16,9 @@ func TestStack(t *testing.T) {
 		t.Errorf("%v not empty", s)
 	}
 	n, err := s.pop()
-	if err != ERR_UNDERFLOW {
+	if err != errUnderflow {
 		t.Errorf(" got %v", err)
-		t.Errorf("want %v", ERR_UNDERFLOW)
+		t.Errorf("want %v", errUnderflow)
 	}
 	s.push(15)
 	s.push(6)

@@ -5,6 +5,6 @@ import (
 )
 
 var (
-	ERR_OVERFLOW  = errors.New("overflow")
-	ERR_UNDERFLOW = errors.New("underflow")
+	errOverflow  = errors.New("overflow")
+	errUnderflow = errors.New("underflow")
 )

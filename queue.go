@@ -14,7 +14,7 @@ func (q *queue) New(size int) {
 
 func (q *queue) enqueue(x int) error {
 	if q.head == q.tail+1 {
-		return ERR_OVERFLOW
+		return errOverflow
 	}
 	q.data[q.tail] = x
 	if q.tail == len(q.data)-1 {
@@ -27,7 +27,7 @@ func (q *queue) enqueue(x int) error {
 
 func (q *queue) dequeue() (int, error) {
 	if q.head == q.tail {
-		return 0, ERR_UNDERFLOW
+		return 0, errUnderflow
 	}
 	x := q.data[q.head]
 	if q.head == len(q.data)-1 {

@@ -20,9 +20,9 @@ func TestQueue(t *testing.T) {
 		t.Errorf("want %v", snapshot1)
 	}
 	_, err := q.dequeue()
-	if err != ERR_UNDERFLOW {
+	if err != errUnderflow {
 		t.Errorf(" got %v", err)
-		t.Errorf("want %v", ERR_UNDERFLOW)
+		t.Errorf("want %v", errUnderflow)
 	}
 	for _, x := range []int{2, 3, 4, 5, 6, 7, 15, 6, 9, 8, 4} {
 		q.enqueue(x)
@@ -58,9 +58,9 @@ func TestQueue(t *testing.T) {
 		t.Errorf("want %v", snapshot5)
 	}
 	err = q.enqueue(10)
-	if err != ERR_OVERFLOW {
+	if err != errOverflow {
 		t.Errorf(" got %v", err)
-		t.Errorf("want %v", ERR_OVERFLOW)
+		t.Errorf("want %v", errOverflow)
 	}
 	n, err := q.dequeue()
 	if n != 15 || err != nil {

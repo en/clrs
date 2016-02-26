@@ -25,7 +25,7 @@ func (s *stack) push(x int) {
 
 func (s *stack) pop() (int, error) {
 	if s.empty() {
-		return 0, ERR_UNDERFLOW
+		return 0, errUnderflow
 	}
 	s.top = s.top - 1
 	return s.data[s.top+1], nil
