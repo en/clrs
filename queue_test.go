@@ -27,6 +27,11 @@ func TestQueue(t *testing.T) {
 	for _, x := range []int{2, 3, 4, 5, 6, 7, 15, 6, 9, 8, 4} {
 		q.enqueue(x)
 	}
+	err = q.enqueue(10)
+	if err != errOverflow {
+		t.Errorf(" got %v", err)
+		t.Errorf("want %v", errOverflow)
+	}
 	if !reflect.DeepEqual(q, snapshot2) {
 		t.Errorf(" got %v", q)
 		t.Errorf("want %v", snapshot2)

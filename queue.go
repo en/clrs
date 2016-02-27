@@ -13,7 +13,13 @@ func (q *queue) New(size int) {
 }
 
 func (q *queue) enqueue(x int) error {
-	if q.head == q.tail+1 {
+	var ntail int
+	if q.tail == len(q.data)-1 {
+		ntail = 0
+	} else {
+		ntail = q.tail + 1
+	}
+	if q.head == ntail {
 		return errOverflow
 	}
 	q.data[q.tail] = x
