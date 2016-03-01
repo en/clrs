@@ -5,6 +5,7 @@ import (
 )
 
 var (
-	errOverflow  = errors.New("overflow")
-	errUnderflow = errors.New("underflow")
+	errOverflow   = errors.New("overflow")
+	errUnderflow  = errors.New("underflow")
+	errOutOfSpace = errors.New("out of space")
 )

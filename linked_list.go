@@ -133,3 +133,75 @@ func (l *dsLinkedList) listDelete(x *dNode) {
 	x.prev.next = x.next
 	x.next.prev = x.prev
 }
+
+type multipleArrayLinkedList struct {
+	head int
+	free int
+	prev []int
+	key  []int
+	next []int
+}
+
+func (l *multipleArrayLinkedList) New(size int) {
+	l.head = -1
+	l.free = -1
+	if size > 0 {
+		l.prev = make([]int, size)
+		l.key = make([]int, size)
+		l.next = make([]int, size)
+		for i := 0; i <= size-2; i++ {
+			l.next[i] = i + 1
+		}
+		l.next[size-1] = -1
+		l.free = 0
+	}
+}
+
+func (l *multipleArrayLinkedList) allocateObject() (int, error) {
+	if l.free == -1 {
+		return -1, errOutOfSpace
+	}
+	x := l.free
+	l.free = l.next[x]
+	return x, nil
+}
+
+func (l *multipleArrayLinkedList) freeObject(x int) {
+	l.next[x] = l.free
+	l.free = x
+}
+
+func (l *multipleArrayLinkedList) listSearch(k int) int {
+	x := l.head
+	for x != -1 && l.key[x] != k {
+		x = l.next[x]
+	}
+	return x
+}
+
+func (l *multipleArrayLinkedList) listInsert(k int) error {
+	i, err := l.allocateObject()
+	if err != nil {
+		return err
+	}
+	l.key[i] = k
+	l.next[i] = l.head
+	if l.head != -1 {
+		l.prev[l.head] = i
+	}
+	l.head = i
+	l.prev[i] = -1
+	return nil
+}
+
+func (l *multipleArrayLinkedList) listDelete(x int) {
+	if l.prev[x] != -1 {
+		l.next[l.prev[x]] = l.next[x]
+	} else {
+		l.head = l.next[x]
+	}
+	if l.next[x] != -1 {
+		l.prev[l.next[x]] = l.prev[x]
+	}
+	l.freeObject(x)
+}
