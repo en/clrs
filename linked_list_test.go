@@ -59,6 +59,29 @@ func TestSinglyLinkedList(t *testing.T) {
 	}
 }
 
+func TestReverseSinglyLinkedList(t *testing.T) {
+	l := singlyLinkedList{}
+	var nodes []*sNode
+	for _, v := range []int{15, 6, 9, 8} {
+		x := new(sNode)
+		x.key = v
+		x.next = nil
+		nodes = append(nodes, x)
+	}
+	for _, x := range nodes {
+		l.listInsert(x)
+	}
+	l.reverse()
+	x := l.head
+	for _, n := range nodes {
+		if x != n {
+			t.Errorf(" got %v", x)
+			t.Errorf("want %v", n)
+		}
+		x = x.next
+	}
+}
+
 func TestDoublyLinkedList(t *testing.T) {
 	l := doublyLinkedList{}
 	var nodes []*dNode

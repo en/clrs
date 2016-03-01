@@ -52,6 +52,18 @@ func (l *singlyLinkedList) listDelete(x *sNode) error {
 	return nil
 }
 
+func (l *singlyLinkedList) reverse() {
+	var prev *sNode
+	x := l.head
+	for x != nil {
+		next := x.next
+		x.next = prev
+		prev = x
+		x = next
+	}
+	l.head = prev
+}
+
 type dNode struct {
 	prev *dNode
 	key  int
