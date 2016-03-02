@@ -206,6 +206,49 @@ func (l *multipleArrayLinkedList) listDelete(x int) {
 	l.freeObject(x)
 }
 
+func (l *multipleArrayLinkedList) compactifyList() {
+	if l.free == -1 {
+		return
+	}
+	x := l.free
+	for x != -1 {
+		l.prev[x] = -2
+		x = l.next[x]
+	}
+	left := 0
+	right := len(l.key) - 1
+	for {
+		for left <= len(l.key)-1 && l.prev[left] != -2 {
+			left = left + 1
+		}
+		for right >= 0 && l.prev[right] == -2 {
+			right = right - 1
+		}
+		if left >= right {
+			break
+		}
+		l.prev[left], l.prev[right] = l.prev[right], l.prev[left]
+		l.key[left], l.key[right] = l.key[right], l.key[left]
+		l.next[left], l.next[right] = l.next[right], l.next[left]
+		// update left
+		if l.prev[left] != -1 {
+			l.next[l.prev[left]] = left
+		} else {
+			l.head = left
+		}
+		if l.next[left] != -1 {
+			l.prev[l.next[left]] = left
+		}
+		left = left + 1
+		right = right - 1
+	}
+	l.free = left
+	for x := l.free; x <= len(l.key)-2; x++ {
+		l.next[x] = x + 1
+	}
+	l.next[len(l.key)-1] = -1
+}
+
 type singleArrayLinkedList struct {
 	head int
 	free int

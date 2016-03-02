@@ -272,6 +272,28 @@ func TestMultipleArrayLinkedList(t *testing.T) {
 	}
 }
 
+func TestCompactifyList(t *testing.T) {
+	l := multipleArrayLinkedList{
+		head: 6,
+		free: 3,
+		next: []int{-1, 2, -1, 7, 1, 0, 4, 5},
+		key:  []int{0, 4, 1, 0, 16, 0, 9, 0},
+		prev: []int{0, 4, 1, 0, 6, 0, -1, 0},
+	}
+	want := multipleArrayLinkedList{
+		head: 0,
+		free: 4,
+		next: []int{3, 2, -1, 1, 5, 6, 7, -1},
+		key:  []int{9, 4, 1, 16, 0, 0, 0, 0},
+		prev: []int{-1, 3, 1, 0, -2, -2, -2, -2},
+	}
+	l.compactifyList()
+	if !reflect.DeepEqual(l, want) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", want)
+	}
+}
+
 func TestSingleArrayLinkedList(t *testing.T) {
 	snapshot1 := singleArrayLinkedList{
 		head: -1,
