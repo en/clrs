@@ -205,3 +205,95 @@ func (l *multipleArrayLinkedList) listDelete(x int) {
 	}
 	l.freeObject(x)
 }
+
+type singleArrayLinkedList struct {
+	head int
+	free int
+	data []int
+}
+
+func (l *singleArrayLinkedList) key(p int) int {
+	return l.data[p]
+}
+
+func (l *singleArrayLinkedList) setKey(p, v int) {
+	l.data[p] = v
+}
+
+func (l *singleArrayLinkedList) next(p int) int {
+	return l.data[p+1]
+}
+
+func (l *singleArrayLinkedList) setNext(p, v int) {
+	l.data[p+1] = v
+}
+
+func (l *singleArrayLinkedList) prev(p int) int {
+	return l.data[p+2]
+}
+
+func (l *singleArrayLinkedList) setPrev(p, v int) {
+	l.data[p+2] = v
+}
+
+func (l *singleArrayLinkedList) New(size int) {
+	l.head = -1
+	l.free = -1
+	if size > 0 {
+		l.data = make([]int, 3*size)
+		for i := 0; i < 3*(size-1); i += 3 {
+			l.setNext(i, i+3)
+		}
+		l.setNext(3*(size-1), -1)
+		l.free = 0
+	}
+}
+
+func (l *singleArrayLinkedList) allocateObject() (int, error) {
+	if l.free == -1 {
+		return -1, errOutOfSpace
+	}
+	x := l.free
+	l.free = l.next(x)
+	return x, nil
+}
+
+func (l *singleArrayLinkedList) freeObject(x int) {
+	l.setNext(x, l.free)
+	l.free = x
+}
+
+func (l *singleArrayLinkedList) listSearch(k int) int {
+	x := l.head
+	for x != -1 && l.key(x) != k {
+		x = l.next(x)
+	}
+	return x
+}
+
+func (l *singleArrayLinkedList) listInsert(k int) error {
+	p, err := l.allocateObject()
+	if err != nil {
+		return err
+	}
+	l.setKey(p, k)
+	l.setNext(p, l.head)
+	if l.head != -1 {
+		l.setPrev(l.head, p)
+	}
+	l.head = p
+	l.setPrev(p, -1)
+	return nil
+}
+
+func (l *singleArrayLinkedList) listDelete(x int) {
+	if l.prev(x) != -1 {
+		l.setNext(l.prev(x), l.next(x))
+	} else {
+		l.head = l.next(x)
+	}
+	if l.next(x) != -1 {
+		l.setPrev(l.next(x), l.prev(x))
+	}
+	l.freeObject(x)
+}

@@ -271,3 +271,121 @@ func TestMultipleArrayLinkedList(t *testing.T) {
 		t.Errorf("want %v", -1)
 	}
 }
+
+func TestSingleArrayLinkedList(t *testing.T) {
+	snapshot1 := singleArrayLinkedList{
+		head: -1,
+		free: 0,
+		data: []int{
+			0, 3, 0,
+			0, 6, 0,
+			0, 9, 0,
+			0, -1, 0,
+		},
+	}
+	snapshot2 := singleArrayLinkedList{
+		head: 9,
+		free: -1,
+		data: []int{
+			15, -1, 3,
+			6, 0, 6,
+			9, 3, 9,
+			8, 6, -1,
+		},
+	}
+	snapshot3 := singleArrayLinkedList{
+		head: 9,
+		free: 6,
+		data: []int{
+			15, -1, 3,
+			6, 0, 9,
+			9, -1, 9,
+			8, 3, -1,
+		},
+	}
+	snapshot4 := singleArrayLinkedList{
+		head: 9,
+		free: 0,
+		data: []int{
+			15, 6, 3,
+			6, -1, 9,
+			9, -1, 9,
+			8, 3, -1,
+		},
+	}
+	snapshot5 := singleArrayLinkedList{
+		head: 3,
+		free: 9,
+		data: []int{
+			15, 6, 3,
+			6, -1, -1,
+			9, -1, 9,
+			8, 0, -1,
+		},
+	}
+	snapshot6 := singleArrayLinkedList{
+		head: 9,
+		free: 0,
+		data: []int{
+			15, 6, 3,
+			6, -1, 9,
+			9, -1, 9,
+			5, 3, -1,
+		},
+	}
+	l := singleArrayLinkedList{}
+	l.New(4)
+	if !reflect.DeepEqual(l, snapshot1) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot1)
+	}
+	for _, v := range []int{15, 6, 9, 8} {
+		err := l.listInsert(v)
+		if err != nil {
+			t.Errorf(" got %v", err)
+			t.Errorf("want %v", nil)
+		}
+	}
+	if !reflect.DeepEqual(l, snapshot2) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot2)
+	}
+	err := l.listInsert(5)
+	if err != errOutOfSpace {
+		t.Errorf(" got %v", err)
+		t.Errorf("want %v", errOutOfSpace)
+	}
+	l.listDelete(6)
+	if !reflect.DeepEqual(l, snapshot3) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot3)
+	}
+	l.listDelete(0)
+	if !reflect.DeepEqual(l, snapshot4) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot4)
+	}
+	l.listDelete(9)
+	if !reflect.DeepEqual(l, snapshot5) {
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot5)
+	}
+	err = l.listInsert(5)
+	if err != nil || !reflect.DeepEqual(l, snapshot6) {
+		t.Errorf(" err %v", err)
+		t.Errorf(" got %v", l)
+		t.Errorf("want %v", snapshot6)
+	}
+	if x := l.listSearch(5); x != 9 {
+		t.Errorf(" got %v", x)
+		t.Errorf("want %v", 9)
+	}
+	if x := l.listSearch(6); x != 3 {
+		t.Errorf(" got %v", x)
+		t.Errorf("want %v", 3)
+	}
+	if x := l.listSearch(15); x != -1 {
+		t.Errorf(" got %v", x)
+		t.Errorf("want %v", -1)
+	}
+}
