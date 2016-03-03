@@ -2,19 +2,19 @@ package clrs
 
 type stack struct {
 	top  int
-	data []int
+	data []interface{}
 }
 
 func (s *stack) New() {
 	s.top = -1
-	s.data = make([]int, 0)
+	s.data = make([]interface{}, 0)
 }
 
 func (s *stack) empty() bool {
 	return s.top == -1
 }
 
-func (s *stack) push(x int) {
+func (s *stack) push(x interface{}) {
 	s.top = s.top + 1
 	if len(s.data) > s.top {
 		s.data[s.top] = x
@@ -23,7 +23,7 @@ func (s *stack) push(x int) {
 	}
 }
 
-func (s *stack) pop() (int, error) {
+func (s *stack) pop() (interface{}, error) {
 	if s.empty() {
 		return 0, errUnderflow
 	}

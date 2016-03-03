@@ -6,10 +6,10 @@ import (
 )
 
 func TestStack(t *testing.T) {
-	snapshot1 := stack{top: 3, data: []int{15, 6, 2, 9}}
-	snapshot2 := stack{top: 5, data: []int{15, 6, 2, 9, 17, 3}}
-	snapshot3 := stack{top: 4, data: []int{15, 6, 2, 9, 17, 3}}
-	snapshot4 := stack{top: 5, data: []int{15, 6, 2, 9, 17, 4}}
+	snapshot1 := stack{top: 3, data: []interface{}{15, 6, 2, 9}}
+	snapshot2 := stack{top: 5, data: []interface{}{15, 6, 2, 9, 17, 3}}
+	snapshot3 := stack{top: 4, data: []interface{}{15, 6, 2, 9, 17, 3}}
+	snapshot4 := stack{top: 5, data: []interface{}{15, 6, 2, 9, 17, 4}}
 	s := stack{}
 	s.New()
 	if !s.empty() {
