@@ -60,3 +60,39 @@ func (t *binaryTree) nonrecursiveTraversal(c chan int) {
 		}
 	}
 }
+
+func (t *binaryTree) nonrecursiveConstantExtraSpaceTraversalIter() chan int {
+	c := make(chan int)
+	go func() {
+		t.nonrecursiveConstantExtraSpaceTraversal(c)
+		close(c)
+	}()
+	return c
+}
+
+func (t *binaryTree) nonrecursiveConstantExtraSpaceTraversal(c chan int) {
+	if t.root == nil {
+		return
+	}
+	node := t.root
+	var prev *binaryTreeNode
+	for node != nil {
+		if prev == node.p {
+			c <- node.key
+			prev = node
+			if node.left != nil {
+				node = node.left
+			} else if node.right != nil {
+				node = node.right
+			} else {
+				node = node.p
+			}
+		} else if (prev == node.left) && (node.right != nil) {
+			prev = node
+			node = node.right
+		} else {
+			prev = node
+			node = node.p
+		}
+	}
+}

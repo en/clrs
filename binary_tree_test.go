@@ -61,3 +61,16 @@ func TestBinaryTreeNonrecursiveTraversal(t *testing.T) {
 		i = i + 1
 	}
 }
+
+func TestBinaryTreeNonrecursiveConstantExtraSpaceTraversal(t *testing.T) {
+	bt := buildTestBinaryTree()
+	want := []int{1, 2, 4, 7, 8, 3, 5, 9, 11, 6, 10}
+	i := 0
+	for key := range bt.nonrecursiveConstantExtraSpaceTraversalIter() {
+		if key != want[i] {
+			t.Errorf(" got %v", key)
+			t.Errorf("want %v", want[i])
+		}
+		i = i + 1
+	}
+}
