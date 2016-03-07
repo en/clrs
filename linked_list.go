@@ -102,6 +102,16 @@ func (l *doublyLinkedList) listDelete(x *dNode) {
 	}
 }
 
+func (l *doublyLinkedList) toArray() []int {
+	a := []int{}
+	x := l.head
+	for x != nil {
+		a = append(a, x.key)
+		x = x.next
+	}
+	return a
+}
+
 // circular, doubly linked list with a sentinel
 type dsLinkedList struct {
 	sentinel *dNode
