@@ -4,11 +4,11 @@ import (
 	"testing"
 )
 
-func buildTestBinaryTree() *binaryTree {
-	bt := new(binaryTree)
-	var nodes []*binaryTreeNode
+func buildTestBST() *BST {
+	t := new(BST)
+	var nodes []*BSTNode
 	for i := 1; i <= 11; i++ {
-		n := new(binaryTreeNode)
+		n := new(BSTNode)
 		n.key = i
 		nodes = append(nodes, n)
 	}
@@ -32,15 +32,15 @@ func buildTestBinaryTree() *binaryTree {
 	nodes[8].left = nodes[10]
 	nodes[9].p = nodes[5]
 	nodes[10].p = nodes[8]
-	bt.root = nodes[0]
-	return bt
+	t.root = nodes[0]
+	return t
 }
 
-func TestBinaryTreeRecursiveTraversal(t *testing.T) {
-	bt := buildTestBinaryTree()
+func TestBSTPreorderTreeWalk(t *testing.T) {
+	bst := buildTestBST()
 	want := []int{1, 2, 4, 7, 8, 3, 5, 9, 11, 6, 10}
 	i := 0
-	for key := range bt.recursiveTraversalIter() {
+	for key := range bst.preorderTreeWalkIter() {
 		if key != want[i] {
 			t.Errorf(" got %v", key)
 			t.Errorf("want %v", want[i])
@@ -49,11 +49,11 @@ func TestBinaryTreeRecursiveTraversal(t *testing.T) {
 	}
 }
 
-func TestBinaryTreeNonrecursiveTraversal(t *testing.T) {
-	bt := buildTestBinaryTree()
+func TestBSTIterativePreorderTreeWalk(t *testing.T) {
+	bst := buildTestBST()
 	want := []int{1, 2, 4, 7, 8, 3, 5, 9, 11, 6, 10}
 	i := 0
-	for key := range bt.nonrecursiveTraversalIter() {
+	for key := range bst.iterativePreorderTreeWalkIter() {
 		if key != want[i] {
 			t.Errorf(" got %v", key)
 			t.Errorf("want %v", want[i])
@@ -62,11 +62,11 @@ func TestBinaryTreeNonrecursiveTraversal(t *testing.T) {
 	}
 }
 
-func TestBinaryTreeNonrecursiveConstantExtraSpaceTraversal(t *testing.T) {
-	bt := buildTestBinaryTree()
+func TestBSTConstantExtraSpacePreorderTreeWalk(t *testing.T) {
+	bst := buildTestBST()
 	want := []int{1, 2, 4, 7, 8, 3, 5, 9, 11, 6, 10}
 	i := 0
-	for key := range bt.nonrecursiveConstantExtraSpaceTraversalIter() {
+	for key := range bst.constantExtraSpacePreorderTreeWalkIter() {
 		if key != want[i] {
 			t.Errorf(" got %v", key)
 			t.Errorf("want %v", want[i])
