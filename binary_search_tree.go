@@ -13,20 +13,28 @@ type BST struct {
 	root *BSTNode
 }
 
-func (t *BST) preorderTreeWalkIter() chan int {
+func (t *BST) toArray() []int {
+	a := []int{}
+	for key := range t.inorderTreeWalkIter() {
+		a = append(a, key)
+	}
+	return a
+}
+
+func (t *BST) inorderTreeWalkIter() chan int {
 	c := make(chan int)
 	go func() {
-		t.preorderTreeWalk(t.root, c)
+		t.inorderTreeWalk(t.root, c)
 		close(c)
 	}()
 	return c
 }
 
-func (t *BST) preorderTreeWalk(x *BSTNode, c chan int) {
+func (t *BST) inorderTreeWalk(x *BSTNode, c chan int) {
 	if x != nil {
+		t.inorderTreeWalk(x.left, c)
 		c <- x.key
-		t.preorderTreeWalk(x.left, c)
-		t.preorderTreeWalk(x.right, c)
+		t.inorderTreeWalk(x.right, c)
 	}
 }
 
@@ -58,16 +66,16 @@ func (t *BST) iterativePreorderTreeWalk(c chan int) {
 	}
 }
 
-func (t *BST) constantExtraSpacePreorderTreeWalkIter() chan int {
+func (t *BST) constantExtraSpaceTreeWalkIter() chan int {
 	c := make(chan int)
 	go func() {
-		t.constantExtraSpacePreorderTreeWalk(c)
+		t.constantExtraSpaceTreeWalk(c)
 		close(c)
 	}()
 	return c
 }
 
-func (t *BST) constantExtraSpacePreorderTreeWalk(c chan int) {
+func (t *BST) constantExtraSpaceTreeWalk(c chan int) {
 	if t.root == nil {
 		return
 	}
@@ -91,5 +99,116 @@ func (t *BST) constantExtraSpacePreorderTreeWalk(c chan int) {
 			prev = node
 			node = node.p
 		}
+	}
+}
+
+func (t *BST) treeSearch(x *BSTNode, k int) *BSTNode {
+	if x == nil || k == x.key {
+		return x
+	}
+	if k < x.key {
+		return t.treeSearch(x.left, k)
+	}
+	return t.treeSearch(x.right, k)
+}
+
+func (t *BST) iterativeTreeSearch(x *BSTNode, k int) *BSTNode {
+	for x != nil && k != x.key {
+		if k < x.key {
+			x = x.left
+		} else {
+			x = x.right
+		}
+	}
+	return x
+}
+
+func (t *BST) treeMinimum(x *BSTNode) *BSTNode {
+	for x.left != nil {
+		x = x.left
+	}
+	return x
+}
+
+func (t *BST) treeMaximum(x *BSTNode) *BSTNode {
+	for x.right != nil {
+		x = x.right
+	}
+	return x
+}
+
+func (t *BST) treeSuccessor(x *BSTNode) *BSTNode {
+	if x.right != nil {
+		return t.treeMinimum(x.right)
+	}
+	y := x.p
+	for y != nil && x == y.right {
+		x = y
+		y = y.p
+	}
+	return y
+}
+
+func (t *BST) treePredecessor(x *BSTNode) *BSTNode {
+	if x.left != nil {
+		return t.treeMaximum(x.left)
+	}
+	y := x.p
+	for y != nil && x == y.left {
+		x = y
+		y = y.p
+	}
+	return y
+}
+
+func (t *BST) treeInsert(z *BSTNode) {
+	var y *BSTNode
+	x := t.root
+	for x != nil {
+		y = x
+		if z.key < x.key {
+			x = x.left
+		} else {
+			x = x.right
+		}
+	}
+	z.p = y
+	if y == nil {
+		t.root = z
+	} else if z.key < y.key {
+		y.left = z
+	} else {
+		y.right = z
+	}
+}
+
+func (t *BST) transplant(u, v *BSTNode) {
+	if u.p == nil {
+		t.root = v
+	} else if u == u.p.left {
+		u.p.left = v
+	} else {
+		u.p.right = v
+	}
+	if v != nil {
+		v.p = u.p
+	}
+}
+
+func (t *BST) treeDelete(z *BSTNode) {
+	if z.left == nil {
+		t.transplant(z, z.right)
+	} else if z.right == nil {
+		t.transplant(z, z.left)
+	} else {
+		y := t.treeMinimum(z.right)
+		if y.p != z {
+			t.transplant(y, y.right)
+			y.right = z.right
+			y.right.p = y
+		}
+		t.transplant(z, y)
+		y.left = z.left
+		y.left.p = y
 	}
 }
