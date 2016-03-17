@@ -1,5 +1,9 @@
 package clrs
 
+import (
+	"math"
+)
+
 // BSTNode ...
 type BSTNode struct {
 	key   int
@@ -14,9 +18,49 @@ type BST struct {
 }
 
 func (t *BST) toArray() []int {
-	a := []int{}
-	for key := range t.inorderTreeWalkIter() {
-		a = append(a, key)
+	var nodes []*BSTNode
+	layer := 0
+	for {
+		currentLayerNodes := int(math.Pow(2.0, float64(layer)))
+		down := false
+		for i := currentLayerNodes - 1; i <= 2*currentLayerNodes-2; i++ {
+			if i == 0 {
+				if t.root != nil {
+					down = true
+					nodes = append(nodes, t.root)
+				}
+			} else {
+				p := (i - 1) / 2
+				isLeft := i == (2*p + 1)
+				if nodes[p] == nil {
+					nodes = append(nodes, nil)
+				} else {
+					var node *BSTNode
+					if isLeft {
+						node = nodes[p].left
+					} else {
+						node = nodes[p].right
+					}
+					if node != nil {
+						down = true
+					}
+					nodes = append(nodes, node)
+				}
+			}
+		}
+		if !down {
+			nodes = nodes[:currentLayerNodes-1]
+			break
+		}
+		layer++
+	}
+	a := make([]int, len(nodes))
+	for i, node := range nodes {
+		if node != nil {
+			a[i] = node.key
+		} else {
+			a[i] = -1
+		}
 	}
 	return a
 }

@@ -55,7 +55,13 @@ func buildTestBST() *BST {
 
 func TestBSTToArray(t *testing.T) {
 	bst := buildTestBST()
-	want := []int{2, 3, 4, 6, 7, 9, 13, 15, 17, 18, 20}
+	want := []int{
+		15,
+		6, 18,
+		3, 7, 17, 20,
+		2, 4, -1, 13, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	}
 	got := bst.toArray()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
@@ -179,12 +185,17 @@ func TestBSTTreePredecessor(t *testing.T) {
 
 func TestBSTTreeInsert(t *testing.T) {
 	bst := new(BST)
-	for _, v := range []int{20, 18, 17, 15, 13, 9, 7, 6, 4, 3, 2} {
+	for _, v := range []int{12, 5, 18, 2, 9, 15, 19, 17, 13} {
 		n := new(BSTNode)
 		n.key = v
 		bst.treeInsert(n)
 	}
-	want := []int{2, 3, 4, 6, 7, 9, 13, 15, 17, 18, 20}
+	want := []int{
+		12,
+		5, 18,
+		2, 9, 15, 19,
+		-1, -1, -1, -1, 13, 17, -1, -1,
+	}
 	got := bst.toArray()
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
@@ -195,40 +206,68 @@ func TestBSTTreeInsert(t *testing.T) {
 func TestBSTTreeDelete(t *testing.T) {
 	bst := buildTestBST()
 	bst.treeDelete(nodes[8])
+	want := []int{
+		15,
+		6, 18,
+		3, 7, 17, 20,
+		2, -1, -1, 13, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	}
 	got := bst.toArray()
-	want := []int{2, 3, 6, 7, 9, 13, 15, 17, 18, 20}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)
 	}
 	bst = buildTestBST()
 	bst.treeDelete(nodes[9])
+	want = []int{
+		15,
+		6, 18,
+		3, 7, 17, 20,
+		2, 4, -1, 9, -1, -1, -1, -1,
+	}
 	got = bst.toArray()
-	want = []int{2, 3, 4, 6, 7, 9, 15, 17, 18, 20}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)
 	}
 	bst = buildTestBST()
 	bst.treeDelete(nodes[4])
+	want = []int{
+		15,
+		6, 18,
+		3, 13, 17, 20,
+		2, 4, 9, -1, -1, -1, -1, -1,
+	}
 	got = bst.toArray()
-	want = []int{2, 3, 4, 6, 9, 13, 15, 17, 18, 20}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)
 	}
 	bst = buildTestBST()
 	bst.treeDelete(nodes[2])
+	want = []int{
+		15,
+		6, 20,
+		3, 7, 17, -1,
+		2, 4, -1, 13, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	}
 	got = bst.toArray()
-	want = []int{2, 3, 4, 6, 7, 9, 13, 15, 17, 20}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)
 	}
 	bst = buildTestBST()
 	bst.treeDelete(nodes[0])
+	want = []int{
+		17,
+		6, 18,
+		3, 7, -1, 20,
+		2, 4, -1, 13, -1, -1, -1, -1,
+		-1, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+	}
 	got = bst.toArray()
-	want = []int{2, 3, 4, 6, 7, 9, 13, 17, 18, 20}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)
