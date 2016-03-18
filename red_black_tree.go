@@ -27,6 +27,10 @@ type rbtree struct {
 	root *rbnode
 }
 
+func init() {
+	nilNode = new(rbnode)
+}
+
 func (t *rbtree) toArray() []int {
 	var nodes []*rbnode
 	layer := 0
