@@ -23,15 +23,21 @@ type rbnode struct {
 	p     *rbnode
 }
 
+type rbdata struct {
+	key   int
+	color bool
+}
+
 type rbtree struct {
 	root *rbnode
 }
 
 func init() {
 	nilNode = new(rbnode)
+	nilNode.color = BLACK
 }
 
-func (t *rbtree) toArray() []int {
+func (t *rbtree) toArray() []rbdata {
 	var nodes []*rbnode
 	layer := 0
 	for {
@@ -68,12 +74,15 @@ func (t *rbtree) toArray() []int {
 		}
 		layer++
 	}
-	a := make([]int, len(nodes))
+	a := make([]rbdata, len(nodes))
 	for i, node := range nodes {
+		a[i] = rbdata{}
 		if (node != nil) && (node != nilNode) {
-			a[i] = node.key
+			a[i].key = node.key
+			a[i].color = node.color
 		} else {
-			a[i] = -1
+			a[i].key = -1
+			a[i].color = BLACK
 		}
 	}
 	return a
@@ -113,4 +122,68 @@ func (t *rbtree) rightRotate(y *rbnode) {
 	}
 	x.right = y
 	y.p = x
+}
+
+func (t *rbtree) rbInsert(z *rbnode) {
+	y := nilNode
+	x := t.root
+	for x != nilNode {
+		y = x
+		if z.key < x.key {
+			x = x.left
+		} else {
+			x = x.right
+		}
+	}
+	z.p = y
+	if y == nilNode {
+		t.root = z
+	} else if z.key < y.key {
+		y.left = z
+	} else {
+		y.right = z
+	}
+	z.left = nilNode
+	z.right = nilNode
+	z.color = RED
+	t.rbInsertFixup(z)
+}
+
+func (t *rbtree) rbInsertFixup(z *rbnode) {
+	for z.p.color == RED {
+		if z.p == z.p.p.left {
+			y := z.p.p.right
+			if y.color == RED {
+				z.p.color = BLACK
+				y.color = BLACK
+				z.p.p.color = RED
+				z = z.p.p
+			} else {
+				if z == z.p.right {
+					z = z.p
+					t.leftRotate(z)
+				}
+				z.p.color = BLACK
+				z.p.p.color = RED
+				t.rightRotate(z.p.p)
+			}
+		} else {
+			y := z.p.p.left
+			if y.color == RED {
+				z.p.color = BLACK
+				y.color = BLACK
+				z.p.p.color = RED
+				z = z.p.p
+			} else {
+				if z == z.p.left {
+					z = z.p
+					t.rightRotate(z)
+				}
+				z.p.color = BLACK
+				z.p.p.color = RED
+				t.leftRotate(z.p.p)
+			}
+		}
+	}
+	t.root.color = BLACK
 }
