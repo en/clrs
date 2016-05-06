@@ -187,3 +187,107 @@ func (t *rbtree) rbInsertFixup(z *rbnode) {
 	}
 	t.root.color = BLACK
 }
+
+func (t *rbtree) rbTransplant(u, v *rbnode) {
+	if u.p == nilNode {
+		t.root = v
+	} else if u == u.p.left {
+		u.p.left = v
+	} else {
+		u.p.right = v
+	}
+	v.p = u.p
+}
+
+func (t *rbtree) treeMinimum(x *rbnode) *rbnode {
+	for x.left != nilNode {
+		x = x.left
+	}
+	return x
+}
+
+func (t *rbtree) rbDelete(z *rbnode) {
+	var x *rbnode
+	y := z
+	yOriginalColor := y.color
+	if z.left == nilNode {
+		x = z.right
+		t.rbTransplant(z, z.right)
+	} else if z.right == nilNode {
+		x = z.left
+		t.rbTransplant(z, z.left)
+	} else {
+		y = t.treeMinimum(z.right)
+		yOriginalColor = y.color
+		x = y.right
+		if y.p == z {
+			x.p = y
+		} else {
+			t.rbTransplant(y, y.right)
+			y.right = z.right
+			y.right.p = y
+		}
+		t.rbTransplant(z, y)
+		y.left = z.left
+		y.left.p = y
+		y.color = z.color
+	}
+	if yOriginalColor == BLACK {
+		t.rbDeleteFixup(x)
+	}
+}
+
+func (t *rbtree) rbDeleteFixup(x *rbnode) {
+	for x != t.root && x.color == BLACK {
+		if x == x.p.left {
+			w := x.p.right
+			if w.color == RED {
+				w.color = BLACK
+				x.p.color = RED
+				t.leftRotate(x.p)
+				w = x.p.right
+			}
+			if w.left.color == BLACK && w.right.color == BLACK {
+				w.color = RED
+				x = x.p
+			} else {
+				if w.right.color == BLACK {
+					w.left.color = BLACK
+					w.color = RED
+					t.rightRotate(w)
+					w = x.p.right
+				}
+				w.color = x.p.color
+				x.p.color = BLACK
+				w.right.color = BLACK
+				t.leftRotate(x.p)
+				x = t.root
+			}
+		} else {
+			w := x.p.left
+			if w.color == RED {
+				w.color = BLACK
+				x.p.color = RED
+				t.rightRotate(x.p)
+				w = x.p.left
+			}
+			if w.right.color == BLACK && w.left.color == BLACK {
+				w.color = RED
+				x = x.p
+			} else {
+				if w.left.color == BLACK {
+					w.right.color = BLACK
+					w.color = RED
+					t.leftRotate(w)
+					w = x.p.left
+				}
+				w.color = x.p.color
+				x.p.color = BLACK
+				w.left.color = BLACK
+				t.rightRotate(x.p)
+				x = t.root
+			}
+		}
+		x.color = BLACK
+	}
+}

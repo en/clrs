@@ -426,6 +426,158 @@ func buildTestCase6() *rbtree {
 	return rbt
 }
 
+func buildDeleteTestCase1() *rbtree {
+	rbt := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 13.7 (a)
+	for _, v := range []int{1, 0, 3, 2, 4} {
+		n := new(rbnode)
+		n.key = v
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+	rbnodes[0].color = BLACK
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = nilNode
+	rbnodes[1].right = nilNode
+	rbnodes[1].color = BLACK
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[3]
+	rbnodes[2].right = rbnodes[4]
+	rbnodes[2].color = RED
+
+	rbnodes[3].p = rbnodes[2]
+	rbnodes[3].left = nilNode
+	rbnodes[3].right = nilNode
+	rbnodes[3].color = BLACK
+
+	rbnodes[4].p = rbnodes[2]
+	rbnodes[4].left = nilNode
+	rbnodes[4].right = nilNode
+	rbnodes[4].color = BLACK
+
+	rbt.root = rbnodes[0]
+	return rbt
+}
+
+func buildDeleteTestCase2() *rbtree {
+	rbt := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 13.7 (b)
+	for _, v := range []int{1, 0, 3, 2, 4} {
+		n := new(rbnode)
+		n.key = v
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+	rbnodes[0].color = RED
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = nilNode
+	rbnodes[1].right = nilNode
+	rbnodes[1].color = BLACK
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[3]
+	rbnodes[2].right = rbnodes[4]
+	rbnodes[2].color = BLACK
+
+	rbnodes[3].p = rbnodes[2]
+	rbnodes[3].left = nilNode
+	rbnodes[3].right = nilNode
+	rbnodes[3].color = BLACK
+
+	rbnodes[4].p = rbnodes[2]
+	rbnodes[4].left = nilNode
+	rbnodes[4].right = nilNode
+	rbnodes[4].color = BLACK
+
+	rbt.root = rbnodes[0]
+	return rbt
+}
+
+func buildDeleteTestCase3() *rbtree {
+	rbt := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 13.7 (c)
+	for _, v := range []int{1, 0, 3, 2, 4} {
+		n := new(rbnode)
+		n.key = v
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+	rbnodes[0].color = RED
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = nilNode
+	rbnodes[1].right = nilNode
+	rbnodes[1].color = BLACK
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[3]
+	rbnodes[2].right = rbnodes[4]
+	rbnodes[2].color = BLACK
+
+	rbnodes[3].p = rbnodes[2]
+	rbnodes[3].left = nilNode
+	rbnodes[3].right = nilNode
+	rbnodes[3].color = RED
+
+	rbnodes[4].p = rbnodes[2]
+	rbnodes[4].left = nilNode
+	rbnodes[4].right = nilNode
+	rbnodes[4].color = BLACK
+
+	rbt.root = rbnodes[0]
+	return rbt
+}
+
+func buildDeleteTestCase4() *rbtree {
+	rbt := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 13.7 (d)
+	for _, v := range []int{1, 0, 3, 2, 4} {
+		n := new(rbnode)
+		n.key = v
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+	rbnodes[0].color = RED
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = nilNode
+	rbnodes[1].right = nilNode
+	rbnodes[1].color = BLACK
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[3]
+	rbnodes[2].right = rbnodes[4]
+	rbnodes[2].color = BLACK
+
+	rbnodes[3].p = rbnodes[2]
+	rbnodes[3].left = nilNode
+	rbnodes[3].right = nilNode
+	rbnodes[3].color = RED
+
+	rbnodes[4].p = rbnodes[2]
+	rbnodes[4].left = nilNode
+	rbnodes[4].right = nilNode
+	rbnodes[4].color = RED
+
+	rbt.root = rbnodes[0]
+	return rbt
+}
+
 func TestRedBlackTreeToArray(t *testing.T) {
 	rbt := buildTestRBT()
 	want := []rbdata{
@@ -534,5 +686,60 @@ func TestRedBlackInsertFixup(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" case 6 got %v", got)
 		t.Errorf("case 6 want %v", want)
+	}
+}
+
+func TestRedBlackDeleteFixup(t *testing.T) {
+	want := []rbdata{
+		{3, BLACK},
+		{1, BLACK}, {4, RED},
+		{0, BLACK}, {2, RED}, {-1, BLACK}, {-1, BLACK},
+	}
+	//case 1
+	rbt := buildDeleteTestCase1()
+	rbt.rbDeleteFixup(rbnodes[1])
+	got := rbt.toArray()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf(" case 1 got %v", got)
+		t.Errorf("case 1 want %v", want)
+	}
+	want = []rbdata{
+		{1, BLACK},
+		{0, BLACK}, {3, RED},
+		{-1, BLACK}, {-1, BLACK}, {2, BLACK}, {4, BLACK},
+	}
+	//case 2
+	rbt = buildDeleteTestCase2()
+	rbt.rbDeleteFixup(rbnodes[1])
+	got = rbt.toArray()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf(" case 2 got %v", got)
+		t.Errorf("case 2 want %v", want)
+	}
+	want = []rbdata{
+		{2, BLACK},
+		{1, BLACK}, {3, BLACK},
+		{0, BLACK}, {-1, BLACK}, {-1, BLACK}, {4, BLACK},
+	}
+	//case 3
+	rbt = buildDeleteTestCase3()
+	rbt.rbDeleteFixup(rbnodes[1])
+	got = rbt.toArray()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf(" case 3 got %v", got)
+		t.Errorf("case 3 want %v", want)
+	}
+	want = []rbdata{
+		{2, BLACK},
+		{1, BLACK}, {3, BLACK},
+		{0, BLACK}, {-1, BLACK}, {-1, BLACK}, {4, BLACK},
+	}
+	//case 4
+	rbt = buildDeleteTestCase3()
+	rbt.rbDeleteFixup(rbnodes[1])
+	got = rbt.toArray()
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf(" case 4 got %v", got)
+		t.Errorf("case 4 want %v", want)
 	}
 }
