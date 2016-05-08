@@ -578,6 +578,113 @@ func buildDeleteTestCase4() *rbtree {
 	return rbt
 }
 
+func buildTestOsTree() *rbtree {
+	ost := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 14.1
+	data := []struct {
+		key   int
+		size  int
+		color bool
+	}{
+		{26, 20, BLACK},
+		{17, 12, RED}, {41, 7, BLACK},
+		{14, 7, BLACK}, {21, 4, BLACK}, {30, 5, RED}, {47, 1, BLACK},
+		{10, 4, RED}, {16, 2, BLACK}, {19, 2, BLACK}, {21, 1, BLACK}, {28, 1, BLACK}, {38, 3, BLACK},
+		{7, 2, BLACK}, {12, 1, BLACK}, {14, 1, RED}, {20, 1, RED}, {35, 1, RED}, {39, 1, RED},
+		{3, 1, RED},
+	}
+	for _, v := range data {
+		n := new(rbnode)
+		n.key = v.key
+		n.size = v.size
+		n.color = v.color
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = rbnodes[3]
+	rbnodes[1].right = rbnodes[4]
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[5]
+	rbnodes[2].right = rbnodes[6]
+
+	rbnodes[3].p = rbnodes[1]
+	rbnodes[3].left = rbnodes[7]
+	rbnodes[3].right = rbnodes[8]
+
+	rbnodes[4].p = rbnodes[1]
+	rbnodes[4].left = rbnodes[9]
+	rbnodes[4].right = rbnodes[10]
+
+	rbnodes[5].p = rbnodes[2]
+	rbnodes[5].left = rbnodes[11]
+	rbnodes[5].right = rbnodes[12]
+
+	rbnodes[6].p = rbnodes[2]
+	rbnodes[6].left = nilNode
+	rbnodes[6].right = nilNode
+
+	rbnodes[7].p = rbnodes[3]
+	rbnodes[7].left = rbnodes[13]
+	rbnodes[7].right = rbnodes[14]
+
+	rbnodes[8].p = rbnodes[3]
+	rbnodes[8].left = rbnodes[15]
+	rbnodes[8].right = nilNode
+
+	rbnodes[9].p = rbnodes[4]
+	rbnodes[9].left = nilNode
+	rbnodes[9].right = rbnodes[16]
+
+	rbnodes[10].p = rbnodes[4]
+	rbnodes[10].left = nilNode
+	rbnodes[10].right = nilNode
+
+	rbnodes[11].p = rbnodes[5]
+	rbnodes[11].left = nilNode
+	rbnodes[11].right = nilNode
+
+	rbnodes[12].p = rbnodes[5]
+	rbnodes[12].left = rbnodes[17]
+	rbnodes[12].right = rbnodes[18]
+
+	rbnodes[13].p = rbnodes[7]
+	rbnodes[13].left = rbnodes[19]
+	rbnodes[13].right = nilNode
+
+	rbnodes[14].p = rbnodes[7]
+	rbnodes[14].left = nilNode
+	rbnodes[14].right = nilNode
+
+	rbnodes[15].p = rbnodes[8]
+	rbnodes[15].left = nilNode
+	rbnodes[15].right = nilNode
+
+	rbnodes[16].p = rbnodes[9]
+	rbnodes[16].left = nilNode
+	rbnodes[16].right = nilNode
+
+	rbnodes[17].p = rbnodes[12]
+	rbnodes[17].left = nilNode
+	rbnodes[17].right = nilNode
+
+	rbnodes[18].p = rbnodes[12]
+	rbnodes[18].left = nilNode
+	rbnodes[18].right = nilNode
+
+	rbnodes[19].p = rbnodes[13]
+	rbnodes[19].left = nilNode
+	rbnodes[19].right = nilNode
+
+	ost.root = rbnodes[0]
+	return ost
+}
+
 func TestRedBlackTreeToArray(t *testing.T) {
 	rbt := buildTestRBT()
 	want := []rbdata{
@@ -741,5 +848,25 @@ func TestRedBlackDeleteFixup(t *testing.T) {
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf(" case 4 got %v", got)
 		t.Errorf("case 4 want %v", want)
+	}
+}
+
+func TestOsSelect(t *testing.T) {
+	ost := buildTestOsTree()
+	want := rbnodes[12]
+	got := ost.osSelect(ost.root, 17)
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
+	}
+}
+
+func TestOsRank(t *testing.T) {
+	ost := buildTestOsTree()
+	want := 17
+	got := ost.osRank(rbnodes[12])
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
 	}
 }

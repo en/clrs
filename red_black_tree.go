@@ -21,6 +21,7 @@ type rbnode struct {
 	left  *rbnode
 	right *rbnode
 	p     *rbnode
+	size  int
 }
 
 type rbdata struct {
@@ -290,4 +291,27 @@ func (t *rbtree) rbDeleteFixup(x *rbnode) {
 		}
 		x.color = BLACK
 	}
+}
+
+func (t *rbtree) osSelect(x *rbnode, i int) *rbnode {
+	r := x.left.size + 1
+	if i == r {
+		return x
+	} else if i < r {
+		return t.osSelect(x.left, i)
+	} else {
+		return t.osSelect(x.right, i-r)
+	}
+}
+
+func (t *rbtree) osRank(x *rbnode) int {
+	r := x.left.size + 1
+	y := x
+	for y != t.root {
+		if y == y.p.right {
+			r = r + y.p.left.size + 1
+		}
+		y = y.p
+	}
+	return r
 }
