@@ -685,6 +685,73 @@ func buildTestOsTree() *rbtree {
 	return ost
 }
 
+func buildTestIntervalTree() *rbtree {
+	it := new(rbtree)
+	rbnodes = make([]*rbnode, 0)
+	// figure 14.4
+	data := []struct {
+		low   int
+		high  int
+		max   int
+		color bool
+	}{
+		{16, 21, 30, BLACK},
+		{8, 9, 23, RED}, {25, 30, 30, RED},
+		{5, 8, 10, BLACK}, {15, 23, 23, BLACK}, {17, 19, 20, BLACK}, {26, 26, 26, BLACK},
+		{0, 3, 3, RED}, {6, 10, 10, RED}, {19, 20, 20, RED},
+	}
+	for _, v := range data {
+		n := new(rbnode)
+		n.i.low = v.low
+		n.i.high = v.high
+		n.max = v.max
+		n.color = v.color
+		rbnodes = append(rbnodes, n)
+	}
+	rbnodes[0].p = nilNode
+	rbnodes[0].left = rbnodes[1]
+	rbnodes[0].right = rbnodes[2]
+
+	rbnodes[1].p = rbnodes[0]
+	rbnodes[1].left = rbnodes[3]
+	rbnodes[1].right = rbnodes[4]
+
+	rbnodes[2].p = rbnodes[0]
+	rbnodes[2].left = rbnodes[5]
+	rbnodes[2].right = rbnodes[6]
+
+	rbnodes[3].p = rbnodes[1]
+	rbnodes[3].left = rbnodes[7]
+	rbnodes[3].right = rbnodes[8]
+
+	rbnodes[4].p = rbnodes[1]
+	rbnodes[4].left = nilNode
+	rbnodes[4].right = nilNode
+
+	rbnodes[5].p = rbnodes[2]
+	rbnodes[5].left = nilNode
+	rbnodes[5].right = rbnodes[9]
+
+	rbnodes[6].p = rbnodes[2]
+	rbnodes[6].left = nilNode
+	rbnodes[6].right = nilNode
+
+	rbnodes[7].p = rbnodes[3]
+	rbnodes[7].left = nilNode
+	rbnodes[7].right = nilNode
+
+	rbnodes[8].p = rbnodes[3]
+	rbnodes[8].left = nilNode
+	rbnodes[8].right = nilNode
+
+	rbnodes[9].p = rbnodes[5]
+	rbnodes[9].left = nilNode
+	rbnodes[9].right = nilNode
+
+	it.root = rbnodes[0]
+	return it
+}
+
 func TestRedBlackTreeToArray(t *testing.T) {
 	rbt := buildTestRBT()
 	want := []rbdata{
@@ -865,6 +932,26 @@ func TestOsRank(t *testing.T) {
 	ost := buildTestOsTree()
 	want := 17
 	got := ost.osRank(rbnodes[12])
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
+	}
+}
+
+func TestIntervalSearch(t *testing.T) {
+	it := buildTestIntervalTree()
+	want := rbnodes[4]
+	x := interval{22, 25}
+	got := it.intervalSearch(x)
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
+	}
+	// reset
+	it = buildTestIntervalTree()
+	want = nilNode
+	x = interval{11, 14}
+	got = it.intervalSearch(x)
 	if got != want {
 		t.Errorf(" got %v", got)
 		t.Errorf("want %v", want)

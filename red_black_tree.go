@@ -22,11 +22,25 @@ type rbnode struct {
 	right *rbnode
 	p     *rbnode
 	size  int
+	i     interval
+	max   int
+}
+
+func (n *rbnode) overlap(x interval) bool {
+	if x.low > n.i.high || x.high < n.i.low {
+		return false
+	}
+	return true
 }
 
 type rbdata struct {
 	key   int
 	color bool
+}
+
+type interval struct {
+	low  int
+	high int
 }
 
 type rbtree struct {
@@ -314,4 +328,16 @@ func (t *rbtree) osRank(x *rbnode) int {
 		y = y.p
 	}
 	return r
+}
+
+func (t *rbtree) intervalSearch(i interval) *rbnode {
+	x := t.root
+	for x != nilNode && !x.overlap(i) {
+		if x.left != nilNode && x.left.max >= i.low {
+			x = x.left
+		} else {
+			x = x.right
+		}
+	}
+	return x
 }
