@@ -42,3 +42,15 @@ func TestMatrixChainOrder(t *testing.T) {
 		t.Errorf("want %v", wantOut)
 	}
 }
+
+func TestMemoizedMatrixChain(t *testing.T) {
+	q, m := memoizedMatrixChain(matrixChainP)
+	if q != 15125 {
+		t.Errorf(" got %v", q)
+		t.Errorf("want %v", 15125)
+	}
+	if !reflect.DeepEqual(m, wantM) {
+		t.Errorf(" got %v", m)
+		t.Errorf("want %v", wantM)
+	}
+}
