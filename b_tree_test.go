@@ -1,6 +1,7 @@
 package clrs
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -9,6 +10,7 @@ var (
 )
 
 func buildTestBTree() *bTree {
+	bTreeNodes = make([]*bTreeNode, 0)
 	bt := new(bTree)
 	bt._t = 3
 	bt.bTreeCreate()
@@ -63,9 +65,155 @@ func TestBTreeSearch(t *testing.T) {
 	for _, c := range cases {
 		node, index := bt.bTreeSearch(bt.root, c.k)
 		if node != c.wantNode || index != c.wantIndex {
-			t.Errorf("search %c", c.k)
+			t.Errorf("   search %c", c.k)
 			t.Errorf(" got node %v[%v]", node, index)
 			t.Errorf("want node %v[%v]", c.wantNode, c.wantIndex)
+		}
+	}
+}
+
+func TestBTreeInsert(t *testing.T) {
+	bt := buildTestBTree()
+	bt.bTreeInsert('B')
+	wantRoot := []rune{'G', 'M', 'P', 'X', 0}
+	if !reflect.DeepEqual(bt.root.key, wantRoot) {
+		t.Errorf(" got keys %v", bt.root.key)
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren := [][]rune{
+		[]rune{'A', 'B', 'C', 'D', 'E'},
+		[]rune{'J', 'K'},
+		[]rune{'N', 'O'},
+		[]rune{'R', 'S', 'T', 'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert B:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+
+	bt.bTreeInsert('Q')
+	wantRoot = []rune{'G', 'M', 'P', 'T', 'X'}
+	if !reflect.DeepEqual(bt.root.key, wantRoot) {
+		t.Errorf("after insert Q:")
+		t.Errorf(" got keys %v", bt.root.key)
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren = [][]rune{
+		[]rune{'A', 'B', 'C', 'D', 'E'},
+		[]rune{'J', 'K'},
+		[]rune{'N', 'O'},
+		[]rune{'Q', 'R', 'S'},
+		[]rune{'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert Q:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+
+	bt.bTreeInsert('L')
+	wantRoot = []rune{'P'}
+	if !reflect.DeepEqual(bt.root.key[:bt.root.n], wantRoot) {
+		t.Errorf("after insert L:")
+		t.Errorf(" got keys %v", bt.root.key[:bt.root.n])
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren = [][]rune{
+		[]rune{'G', 'M'},
+		[]rune{'T', 'X'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert L:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+	lnode := bt.root.c[0]
+	rnode := bt.root.c[1]
+	wantChildren = [][]rune{
+		[]rune{'A', 'B', 'C', 'D', 'E'},
+		[]rune{'J', 'K', 'L'},
+		[]rune{'N', 'O'},
+	}
+	for i, c := range wantChildren {
+		node := lnode.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert L:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+	wantChildren = [][]rune{
+		[]rune{'Q', 'R', 'S'},
+		[]rune{'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := rnode.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert L:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+
+	bt.bTreeInsert('F')
+	wantRoot = []rune{'P'}
+	if !reflect.DeepEqual(bt.root.key[:bt.root.n], wantRoot) {
+		t.Errorf("after insert F:")
+		t.Errorf(" got keys %v", bt.root.key[:bt.root.n])
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren = [][]rune{
+		[]rune{'C', 'G', 'M'},
+		[]rune{'T', 'X'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert F:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+	lnode = bt.root.c[0]
+	rnode = bt.root.c[1]
+	wantChildren = [][]rune{
+		[]rune{'A', 'B'},
+		[]rune{'D', 'E', 'F'},
+		[]rune{'J', 'K', 'L'},
+		[]rune{'N', 'O'},
+	}
+	for i, c := range wantChildren {
+		node := lnode.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert F:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+	wantChildren = [][]rune{
+		[]rune{'Q', 'R', 'S'},
+		[]rune{'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := rnode.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after insert F:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
 		}
 	}
 }
