@@ -116,3 +116,74 @@ func (t *bTree) bTreeInsertNonfull(x *bTreeNode, k rune) {
 		t.bTreeInsertNonfull(x.c[i-1], k)
 	}
 }
+
+func (t *bTree) bTreeDelete(x *bTreeNode, k rune) {
+	i := 1
+	for i <= x.n && k > x.key[i-1] {
+		i = i + 1
+	}
+	if i <= x.n && k == x.key[i-1] {
+		if x.leaf { // case 1
+			for j := i - 1; j <= x.n-2; j++ {
+				x.key[j] = x.key[j+1]
+			}
+			x.n = x.n - 1
+		} else { // case 2
+			y := x.c[i-1]
+			z := x.c[i]
+			if y.n >= t._t { // case 2a
+				node, kp := t.bTreePredecessor(y, k)
+				t.bTreeDelete(node, kp)
+				x.key[i-1] = kp
+			} else if z.n >= t._t { // case 2b
+				node, kp := t.bTreeSuccessor(z, k)
+				t.bTreeDelete(node, kp)
+				x.key[i-1] = kp
+			} else { // case 2c
+				t.bTreeMerge(x, i)
+				t.bTreeDelete(y, k)
+			}
+		}
+	} else { // case 3
+		t.bTreeDelete(x.c[i-1], k)
+	}
+}
+
+func (t *bTree) bTreePredecessor(x *bTreeNode, k rune) (*bTreeNode, rune) {
+	if x.leaf {
+		return x, x.key[x.n-1]
+	}
+	return t.bTreePredecessor(x.c[x.n], k)
+}
+
+func (t *bTree) bTreeSuccessor(x *bTreeNode, k rune) (*bTreeNode, rune) {
+	if x.leaf {
+		return x, x.key[0]
+	}
+	return t.bTreeSuccessor(x.c[0], k)
+}
+
+func (t *bTree) bTreeMerge(x *bTreeNode, i int) {
+	k := x.key[i-1]
+	y := x.c[i-1]
+	z := x.c[i]
+
+	y.key[y.n] = k
+	y.n = y.n + 1
+
+	var (
+		j int
+	)
+	for j = range z.key[:z.n] {
+		y.key[y.n+j] = z.key[j]
+		y.c[y.n+j] = z.c[j]
+	}
+	y.c[y.n+j+1] = z.c[j+1]
+	y.n = y.n + z.n
+
+	for j = i - 1; j <= x.n-2; j++ {
+		x.key[j] = x.key[j+1]
+		x.c[j+1] = x.c[j+2]
+	}
+	x.n = x.n - 1
+}
