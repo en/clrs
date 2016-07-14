@@ -35,7 +35,7 @@ func (t bTree) bTreeSearch(x *bTreeNode, k rune) (*bTreeNode, int) {
 	} else if x.leaf {
 		return nil, 0
 	} else {
-		diskRead(x.c[i])
+		diskRead(x.c[i-1])
 		return t.bTreeSearch(x.c[i-1], k)
 	}
 }
@@ -145,7 +145,33 @@ func (t *bTree) bTreeDelete(x *bTreeNode, k rune) {
 			}
 		}
 	} else { // case 3
-		t.bTreeDelete(x.c[i-1], k)
+		node := x.c[i-1]
+		if node.n == t._t-1 {
+			var (
+				leftSibling  *bTreeNode
+				rightSibling *bTreeNode
+			)
+			if i > 1 {
+				leftSibling = x.c[i-2]
+			}
+			if i <= x.n {
+				rightSibling = x.c[i]
+			}
+			if rightSibling != nil && rightSibling.n >= t._t { // case 3a
+				t.bTreeRotateLeft(x, i, rightSibling)
+			} else if leftSibling != nil && leftSibling.n >= t._t { // case 3a
+				t.bTreeRotateRight(x, i, leftSibling)
+			} else { // case 3b
+				if rightSibling != nil {
+					t.bTreeMerge(x, i)
+				} else if leftSibling != nil {
+					t.bTreeMerge(x, i-1)
+					node = x.c[i-2]
+				}
+			}
+		}
+		// node now contains at least t keys
+		t.bTreeDelete(node, k)
 	}
 }
 
@@ -186,4 +212,43 @@ func (t *bTree) bTreeMerge(x *bTreeNode, i int) {
 		x.c[j+1] = x.c[j+2]
 	}
 	x.n = x.n - 1
+
+	if t.root == x && x.n == 0 {
+		t.root = x.c[i-1]
+	}
+}
+
+func (t *bTree) bTreeRotateLeft(x *bTreeNode, i int, rightSibling *bTreeNode) {
+	node := x.c[i-1]
+	node.key[node.n] = x.key[i-1]
+	node.c[node.n+1] = rightSibling.c[0]
+	node.n = node.n + 1
+
+	x.key[i-1] = rightSibling.key[0]
+
+	var (
+		j int
+	)
+	for j = 0; j <= rightSibling.n-2; j++ {
+		rightSibling.key[j] = rightSibling.key[j+1]
+		rightSibling.c[j] = rightSibling.c[j+1]
+	}
+	rightSibling.c[j] = rightSibling.c[j+1]
+	rightSibling.n = rightSibling.n - 1
+}
+
+func (t *bTree) bTreeRotateRight(x *bTreeNode, i int, leftSibling *bTreeNode) {
+	node := x.c[i-1]
+	node.c[node.n+1] = node.c[node.n]
+	for j := node.n; j >= 1; j-- {
+		node.key[j] = node.key[j-1]
+		node.c[j] = node.c[j-1]
+	}
+	node.n = node.n + 1
+	node.key[0] = x.key[i-2]
+	node.c[0] = leftSibling.c[leftSibling.n]
+
+	x.key[i-2] = leftSibling.key[leftSibling.n-1]
+
+	leftSibling.n = leftSibling.n - 1
 }

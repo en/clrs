@@ -427,6 +427,54 @@ func TestBTreeDelete(t *testing.T) {
 			t.Errorf("want keys %v", c)
 		}
 	}
+
+	bt.bTreeDelete(bt.root, 'D')
+	wantRoot = []rune{'C', 'L', 'P', 'T', 'X'}
+	if !reflect.DeepEqual(bt.root.key[:bt.root.n], wantRoot) {
+		t.Errorf("after delete D:")
+		t.Errorf(" got keys %v", bt.root.key[:bt.root.n])
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren = [][]rune{
+		[]rune{'A', 'B'},
+		[]rune{'E', 'J', 'K'},
+		[]rune{'N', 'O'},
+		[]rune{'Q', 'R', 'S'},
+		[]rune{'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after delete D:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
+
+	bt.bTreeDelete(bt.root, 'B')
+	wantRoot = []rune{'E', 'L', 'P', 'T', 'X'}
+	if !reflect.DeepEqual(bt.root.key[:bt.root.n], wantRoot) {
+		t.Errorf("after delete B:")
+		t.Errorf(" got keys %v", bt.root.key[:bt.root.n])
+		t.Errorf("want keys %v", wantRoot)
+	}
+	wantChildren = [][]rune{
+		[]rune{'A', 'C'},
+		[]rune{'J', 'K'},
+		[]rune{'N', 'O'},
+		[]rune{'Q', 'R', 'S'},
+		[]rune{'U', 'V'},
+		[]rune{'Y', 'Z'},
+	}
+	for i, c := range wantChildren {
+		node := bt.root.c[i]
+		if !reflect.DeepEqual(node.key[:node.n], c) {
+			t.Errorf("after delete B:")
+			t.Errorf(" got keys %v", node.key[:node.n])
+			t.Errorf("want keys %v", c)
+		}
+	}
 }
 
 func TestBTreePredecessor(t *testing.T) {
