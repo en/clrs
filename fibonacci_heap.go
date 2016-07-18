@@ -77,7 +77,7 @@ func (h *fibHeap) listConcatenate(h2 *fibHeap) {
 func (h *fibHeap) fibHeapExtractMin() *fibNode {
 	z := h.min
 	if z != nil {
-		for _, x := range h.children(z) {
+		for _, x := range h.children(z.child) {
 			h.listInsert(z, x)
 			x.p = nil
 		}
