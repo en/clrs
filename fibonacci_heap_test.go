@@ -170,4 +170,58 @@ func TestFibHeapExtractMin(t *testing.T) {
 			t.Errorf("want %v", want[n.key])
 		}
 	}
+	n46 := h.min.child.right.right.child.right
+	h.fibHeapDecreaseKey(n46, 15)
+	want = map[int]string{
+		15: p(-1, -1, 38, 7, 0, false),
+		7:  p(-1, 23, 15, 18, 3, false),
+		18: p(-1, 39, 7, 38, 2, true),
+		38: p(-1, 41, 18, 15, 1, false),
+		24: p(7, 26, 17, 23, 1, true),
+		17: p(7, 30, 23, 24, 1, false),
+		23: p(7, -1, 24, 17, 0, false),
+		21: p(18, 52, 39, 39, 1, false),
+		39: p(18, -1, 21, 21, 0, true),
+		41: p(38, -1, 41, 41, 0, false),
+		26: p(24, 35, 26, 26, 1, true),
+		30: p(17, -1, 30, 30, 0, false),
+		52: p(21, -1, 52, 52, 0, false),
+		35: p(26, -1, 35, 35, 0, false),
+	}
+	nodes = h.fibHeapWalk()
+	for _, n := range nodes {
+		got := p(w(n.p), w(n.child), w(n.left), w(n.right), n.degree, n.mark)
+		if got != want[n.key] {
+			t.Errorf("node %v", n.key)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want[n.key])
+		}
+	}
+	n35 := h.min.child.right.right.child.child
+	h.fibHeapDecreaseKey(n35, 5)
+	want = map[int]string{
+		15: p(-1, -1, 38, 5, 0, false),
+		5:  p(-1, -1, 15, 26, 0, false),
+		26: p(-1, -1, 5, 24, 0, false),
+		24: p(-1, -1, 26, 7, 0, false),
+		7:  p(-1, 23, 24, 18, 2, false),
+		18: p(-1, 39, 7, 38, 2, true),
+		38: p(-1, 41, 18, 15, 1, false),
+		17: p(7, 30, 23, 23, 1, false),
+		23: p(7, -1, 17, 17, 0, false),
+		21: p(18, 52, 39, 39, 1, false),
+		39: p(18, -1, 21, 21, 0, true),
+		41: p(38, -1, 41, 41, 0, false),
+		30: p(17, -1, 30, 30, 0, false),
+		52: p(21, -1, 52, 52, 0, false),
+	}
+	nodes = h.fibHeapWalk()
+	for _, n := range nodes {
+		got := p(w(n.p), w(n.child), w(n.left), w(n.right), n.degree, n.mark)
+		if got != want[n.key] {
+			t.Errorf("node %v", n.key)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want[n.key])
+		}
+	}
 }

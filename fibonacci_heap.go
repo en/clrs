@@ -187,3 +187,49 @@ func (h *fibHeap) fibHeapWalk() []*fibNode {
 	}
 	return nodes
 }
+
+func (h *fibHeap) fibHeapDecreaseKey(x *fibNode, k int) error {
+	if k > x.key {
+		return errGreater
+	}
+	x.key = k
+	y := x.p
+	if y != nil && x.key < y.key {
+		h.cut(x, y)
+		h.cascadingCut(y)
+	}
+	if x.key < h.min.key {
+		h.min = x
+	}
+	return nil
+}
+
+func (h *fibHeap) cut(x, y *fibNode) {
+	h.listDelete(x)
+	if x == x.right {
+		y.child = nil
+	}
+	y.degree = y.degree - 1
+	h.listInsert(h.min, x)
+	x.p = nil
+	x.mark = false
+}
+
+func (h *fibHeap) cascadingCut(y *fibNode) {
+	z := y.p
+	if z != nil {
+		if !y.mark {
+			y.mark = true
+		} else {
+			h.cut(y, z)
+			h.cascadingCut(z)
+		}
+	}
+}
+
+func (h *fibHeap) fibHeapDelete(x *fibNode) {
+	if h.min != nil {
+		h.fibHeapDecreaseKey(x, h.min.key-1)
+		h.fibHeapExtractMin()
+	}
+}
