@@ -30,22 +30,22 @@ func matrixChainOrder(p []int) ([][]int, [][]int) {
 	return m, s
 }
 
-func printOptimalParents(_s [][]int, _i, _j int) string {
+func printOptimalParents(s [][]int, _i, _j int) string {
 	var (
 		out string
-		f   func([][]int, int, int)
+		f   func(int, int)
 	)
-	f = func(s [][]int, i, j int) {
+	f = func(i, j int) {
 		if i == j {
 			out = out + "A" + fmt.Sprint(i)
 		} else {
 			out = out + "("
-			f(s, i, s[i-1][j-1])
-			f(s, s[i-1][j-1]+1, j)
+			f(i, s[i-1][j-1])
+			f(s[i-1][j-1]+1, j)
 			out = out + ")"
 		}
 	}
-	f(_s, _i, _j)
+	f(_i, _j)
 	return out
 }
 

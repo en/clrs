@@ -28,24 +28,24 @@ func lcsLength(x, y []rune) ([][]int, [][]rune) {
 	return c, b
 }
 
-func printLcs(_b [][]rune, _x []rune, _i, _j int) []rune {
+func printLcs(b [][]rune, x []rune, _i, _j int) []rune {
 	var (
 		out []rune
-		f   func([][]rune, []rune, int, int)
+		f   func(int, int)
 	)
-	f = func(b [][]rune, x []rune, i, j int) {
+	f = func(i, j int) {
 		if i == 0 || j == 0 {
 			return
 		}
 		if b[i][j] == '↖' {
-			f(b, x, i-1, j-1)
+			f(i-1, j-1)
 			out = append(out, x[i-1])
 		} else if b[i][j] == '↑' {
-			f(b, x, i-1, j)
+			f(i-1, j)
 		} else {
-			f(b, x, i, j-1)
+			f(i, j-1)
 		}
 	}
-	f(_b, _x, _i, _j)
+	f(_i, _j)
 	return out
 }
