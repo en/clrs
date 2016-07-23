@@ -48,8 +48,20 @@ func (v protoVEB) minimum() int {
 }
 
 func (v protoVEB) maximum() int {
-	// TODO
-	return 0
+	if v.u == 2 {
+		if v.a[1] == 1 {
+			return 1
+		} else if v.a[0] == 1 {
+			return 0
+		}
+		return -1
+	}
+	maxCluster := v.summary.maximum()
+	if maxCluster == -1 {
+		return -1
+	}
+	offset := v.cluster[maxCluster].maximum()
+	return v.index(maxCluster, offset)
 }
 
 func (v protoVEB) successor(x int) int {
@@ -72,8 +84,22 @@ func (v protoVEB) successor(x int) int {
 }
 
 func (v protoVEB) predecessor(x int) int {
-	// TODO
-	return 0
+	if v.u == 2 {
+		if x == 1 && v.a[0] == 1 {
+			return 0
+		}
+		return -1
+	}
+	offset := v.cluster[v.high(x)].predecessor(v.low(x))
+	if offset != -1 {
+		return v.index(v.high(x), offset)
+	}
+	predecCluster := v.summary.predecessor(v.high(x))
+	if predecCluster == -1 {
+		return -1
+	}
+	offset = v.cluster[predecCluster].maximum()
+	return v.index(predecCluster, offset)
 }
 
 func (v *protoVEB) insert(x int) {
@@ -86,5 +112,24 @@ func (v *protoVEB) insert(x int) {
 }
 
 func (v *protoVEB) delete(x int) {
-	// TODO
+	if v.u == 2 {
+		v.a[x] = 0
+	} else {
+		h := v.high(x)
+		v.cluster[h].delete(v.low(x))
+		if v.cluster[h].count() == 0 {
+			v.summary.delete(h)
+		}
+	}
+}
+
+func (v protoVEB) count() int {
+	if v.u == 2 {
+		return v.a[0] + v.a[1]
+	}
+	count := 0
+	for i := 0; i < int(math.Sqrt(float64(v.u))); i++ {
+		count = count + v.cluster[i].count()
+	}
+	return count
 }
