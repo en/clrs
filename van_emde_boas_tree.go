@@ -133,3 +133,44 @@ func (v protoVEB) count() int {
 	}
 	return count
 }
+
+type vEB struct {
+	u       int
+	min     int
+	max     int
+	summary *vEB
+	cluster []*vEB
+}
+
+func (v vEB) high(x int) int {
+	lsr := math.Pow(2, math.Floor(math.Log2(float64(v.u))/2))
+	return int(math.Floor(float64(x) / lsr))
+}
+
+func (v vEB) low(x int) int {
+	lsr := math.Pow(2, math.Floor(math.Log2(float64(v.u))/2))
+	return x % int(lsr)
+}
+
+func (v vEB) index(x, y int) int {
+	lsr := math.Pow(2, math.Floor(math.Log2(float64(v.u))/2))
+	return x*int(lsr) + y
+}
+
+func (v vEB) minimum() int {
+	return v.min
+}
+
+func (v vEB) maximum() int {
+	return v.max
+}
+
+func (v vEB) member(x int) bool {
+	if x == v.min || x == v.max {
+		return true
+	} else if v.u == 2 {
+		return false
+	} else {
+		return v.cluster[v.high(x)].member(v.low(x))
+	}
+}

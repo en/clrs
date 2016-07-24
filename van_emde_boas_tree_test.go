@@ -184,3 +184,97 @@ func TestProtoVEBDelete(t *testing.T) {
 		t.Errorf("c3sa1 %v", c3sa1)
 	}
 }
+
+func buildTestVEBTree() *vEB {
+	var (
+		p2s []*vEB
+		p4s []*vEB
+	)
+	for _, mm := range [][]int{
+		{0, 1},
+		{1, 1},
+		{1, 1},
+		{-1, -1},
+		{-1, -1},
+		{-1, -1},
+		{0, 1},
+		{1, 1},
+		{1, 1},
+		{-1, -1},
+		{-1, -1},
+		{-1, -1},
+		{1, 1},
+		{-1, -1},
+		{1, 1},
+	} {
+		p := new(vEB)
+		p.u = 2
+		p.min = mm[0]
+		p.max = mm[1]
+		p2s = append(p2s, p)
+	}
+	for i, mm := range [][]int{
+		{0, 3},
+		{3, 3},
+		{0, 3},
+		{-1, -1},
+		{2, 3},
+	} {
+		p := new(vEB)
+		p.u = 4
+		p.summary = p2s[i*3]
+		p.cluster = make([]*vEB, 2)
+		p.cluster[0] = p2s[i*3+1]
+		p.cluster[1] = p2s[i*3+2]
+		p.min = mm[0]
+		p.max = mm[1]
+		p4s = append(p4s, p)
+	}
+	p16 := new(vEB)
+	p16.u = 16
+	p16.summary = p4s[0]
+	p16.min = 2
+	p16.max = 15
+	p16.cluster = make([]*vEB, 4)
+	for i := 0; i < 4; i++ {
+		p16.cluster[i] = p4s[i+1]
+	}
+	return p16
+}
+
+func TestVEBMember(t *testing.T) {
+	v := buildTestVEBTree()
+	for i := 0; i < 16; i++ {
+		got := v.member(i)
+		want := false
+		switch i {
+		case 2, 3, 4, 5, 7, 14, 15:
+			want = true
+		}
+		if got != want {
+			t.Errorf("member(%v)", i)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+}
+
+func TestVEBMinimum(t *testing.T) {
+	v := buildTestVEBTree()
+	got := v.minimum()
+	want := 2
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
+	}
+}
+
+func TestVEBMaximum(t *testing.T) {
+	v := buildTestVEBTree()
+	got := v.maximum()
+	want := 15
+	if got != want {
+		t.Errorf(" got %v", got)
+		t.Errorf("want %v", want)
+	}
+}
