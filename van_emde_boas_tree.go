@@ -94,12 +94,12 @@ func (v protoVEB) predecessor(x int) int {
 	if offset != -1 {
 		return v.index(v.high(x), offset)
 	}
-	predecCluster := v.summary.predecessor(v.high(x))
-	if predecCluster == -1 {
+	predCluster := v.summary.predecessor(v.high(x))
+	if predCluster == -1 {
 		return -1
 	}
-	offset = v.cluster[predecCluster].maximum()
-	return v.index(predecCluster, offset)
+	offset = v.cluster[predCluster].maximum()
+	return v.index(predCluster, offset)
 }
 
 func (v *protoVEB) insert(x int) {
@@ -172,5 +172,114 @@ func (v vEB) member(x int) bool {
 		return false
 	} else {
 		return v.cluster[v.high(x)].member(v.low(x))
+	}
+}
+
+func (v vEB) successor(x int) int {
+	if v.u == 2 {
+		if x == 0 && v.max == 1 {
+			return 1
+		}
+		return -1
+	} else if v.min != -1 && x < v.min {
+		return v.min
+	} else {
+		maxLow := v.cluster[v.high(x)].maximum()
+		if maxLow != -1 && v.low(x) < maxLow {
+			offset := v.cluster[v.high(x)].successor(v.low(x))
+			return v.index(v.high(x), offset)
+		}
+		succCluster := v.summary.successor(v.high(x))
+		if succCluster == -1 {
+			return -1
+		}
+		offset := v.cluster[succCluster].minimum()
+		return v.index(succCluster, offset)
+	}
+}
+
+func (v vEB) predecessor(x int) int {
+	if v.u == 2 {
+		if x == 1 && v.min == 0 {
+			return 0
+		}
+		return -1
+	} else if v.max != -1 && x > v.max {
+		return v.max
+	} else {
+		minLow := v.cluster[v.high(x)].minimum()
+		if minLow != -1 && v.low(x) > minLow {
+			offset := v.cluster[v.high(x)].predecessor(v.low(x))
+			return v.index(v.high(x), offset)
+		}
+		predCluster := v.summary.predecessor(v.high(x))
+		if predCluster == -1 {
+			if v.min != -1 && x > v.min {
+				return v.min
+			}
+			return -1
+		}
+		offset := v.cluster[predCluster].maximum()
+		return v.index(predCluster, offset)
+	}
+}
+
+func (v *vEB) emptyInsert(x int) {
+	v.min = x
+	v.max = x
+}
+
+func (v *vEB) insert(x int) {
+	if v.min == -1 {
+		v.emptyInsert(x)
+	} else {
+		if x < v.min {
+			x, v.min = v.min, x
+		}
+		if v.u > 2 {
+			if v.cluster[v.high(x)].minimum() == -1 {
+				v.summary.insert(v.high(x))
+				v.cluster[v.high(x)].emptyInsert(v.low(x))
+			} else {
+				v.cluster[v.high(x)].insert(v.low(x))
+			}
+		}
+		if x > v.max {
+			v.max = x
+		}
+	}
+}
+
+func (v *vEB) delete(x int) {
+	if v.min == v.max {
+		v.min = -1
+		v.max = -1
+	} else if v.u == 2 {
+		if x == 0 {
+			v.min = 1
+		} else {
+			v.min = 0
+		}
+		v.max = v.min
+	} else {
+		if x == v.min {
+			firstCluster := v.summary.minimum()
+			x := v.index(firstCluster, v.cluster[firstCluster].minimum())
+			v.min = x
+		}
+		v.cluster[v.high(x)].delete(v.low(x))
+		if v.cluster[v.high(x)].minimum() == -1 {
+			v.summary.delete(v.high(x))
+			if x == v.max {
+				summaryMax := v.summary.maximum()
+				if summaryMax == -1 {
+					v.max = v.min
+				} else {
+					v.max = v.index(summaryMax, v.cluster[summaryMax].maximum())
+				}
+			}
+		} else if x == v.max {
+			v.max = v.index(v.high(x), v.cluster[v.high(x)].maximum())
+		}
 	}
 }

@@ -278,3 +278,80 @@ func TestVEBMaximum(t *testing.T) {
 		t.Errorf("want %v", want)
 	}
 }
+
+func TestVEBSuccessor(t *testing.T) {
+	v := buildTestVEBTree()
+	s := []int{2, 3, 4, 5, 7, 14, 15, -1}
+	for i, x := range s[:7] {
+		got := v.successor(x)
+		want := s[i+1]
+		if got != want {
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+}
+
+func TestVEBPredecessor(t *testing.T) {
+	v := buildTestVEBTree()
+	s := []int{-1, 2, 3, 4, 5, 7, 14, 15}
+	for i, x := range s[1:] {
+		got := v.predecessor(x)
+		want := s[i]
+		if got != want {
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+}
+
+func TestVEBInsert(t *testing.T) {
+	v := buildTestVEBTree()
+	v.insert(10)
+	for i := 0; i < 16; i++ {
+		got := v.member(i)
+		want := false
+		switch i {
+		case 2, 3, 4, 5, 7, 10, 14, 15:
+			want = true
+		}
+		if got != want {
+			t.Errorf("member(%v)", i)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+}
+
+func TestVEBDelete(t *testing.T) {
+	v := buildTestVEBTree()
+	v.delete(14)
+	for i := 0; i < 16; i++ {
+		got := v.member(i)
+		want := false
+		switch i {
+		case 2, 3, 4, 5, 7, 15:
+			want = true
+		}
+		if got != want {
+			t.Errorf("member(%v)", i)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+
+	v.delete(15)
+	for i := 0; i < 16; i++ {
+		got := v.member(i)
+		want := false
+		switch i {
+		case 2, 3, 4, 5, 7:
+			want = true
+		}
+		if got != want {
+			t.Errorf("member(%v)", i)
+			t.Errorf(" got %v", got)
+			t.Errorf("want %v", want)
+		}
+	}
+}
