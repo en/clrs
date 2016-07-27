@@ -15,26 +15,12 @@ func (g *component) makeSet(x rune) {
 }
 
 func (g *component) union(x, y rune) {
-	var is []int
 	xi := g.findSet(x)
 	yi := g.findSet(y)
-	if xi > yi {
-		xi = xi - 1
-		is = append(is, yi)
-		is = append(is, xi)
-	} else {
-		yi = yi - 1
-		is = append(is, xi)
-		is = append(is, yi)
+	for k := range g.s[yi] {
+		g.s[xi][k] = true
 	}
-	u := make(map[rune]bool)
-	for _, i := range is {
-		for k := range g.s[i] {
-			u[k] = true
-		}
-		g.s = append(g.s[:i], g.s[i+1:]...)
-	}
-	g.s = append(g.s, u)
+	g.s = append(g.s[:yi], g.s[yi+1:]...)
 }
 
 func (g component) findSet(x rune) int {

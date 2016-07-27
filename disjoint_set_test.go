@@ -21,10 +21,10 @@ func TestSameComponent(t *testing.T) {
 	}
 	g.connectedComponents()
 	want := []map[rune]bool{
-		map[rune]bool{'j': true},
-		map[rune]bool{'h': true, 'i': true},
 		map[rune]bool{'a': true, 'b': true, 'c': true, 'd': true},
 		map[rune]bool{'e': true, 'f': true, 'g': true},
+		map[rune]bool{'h': true, 'i': true},
+		map[rune]bool{'j': true},
 	}
 	if !reflect.DeepEqual(g.s, want) {
 		t.Errorf(" got %v", g.s)
