@@ -6,7 +6,7 @@ import (
 )
 
 func (g graph) bfs(s *vertex) {
-	for v := range g.adj {
+	for _, v := range g.v {
 		if v != s {
 			v.color = WHITE
 			v.d = -1

@@ -18,24 +18,24 @@ func TestBfs(t *testing.T) {
 		{2, 3, 5, 7},
 		{3, 6},
 	}
-	var v []*vertex
+	g.v = make([]*vertex, 0)
 	for _, r := range rs {
 		k := new(vertex)
 		k.key = r
-		v = append(v, k)
+		g.v = append(g.v, k)
 	}
 	g.adj = make(map[*vertex]*adjNode)
-	for i, k := range v {
+	for i, k := range g.v {
 		for _, a := range e[i] {
 			an := new(adjNode)
-			an.v = v[a]
+			an.v = g.v[a]
 			if _, ok := g.adj[k]; ok {
 				an.next = g.adj[k]
 			}
 			g.adj[k] = an
 		}
 	}
-	g.bfs(v[1])
+	g.bfs(g.v[1])
 	for i, want := range []string{
 		"sr",
 		"s",
@@ -46,9 +46,9 @@ func TestBfs(t *testing.T) {
 		"swx",
 		"swxy",
 	} {
-		got := g.printPath(v[1], v[i])
+		got := g.printPath(g.v[1], g.v[i])
 		if got != want {
-			t.Errorf("path %c=>%c", v[1].key, v[i].key)
+			t.Errorf("path %c=>%c", g.v[1].key, g.v[i].key)
 			t.Errorf(" got %v", got)
 			t.Errorf("want %v", want)
 		}

@@ -12,6 +12,7 @@ const (
 type vertex struct {
 	color int
 	d     int
+	f     int
 	p     *vertex
 	key   rune
 }
@@ -22,5 +23,7 @@ type adjNode struct {
 }
 
 type graph struct {
-	adj map[*vertex]*adjNode
+	adj  map[*vertex]*adjNode
+	v    []*vertex
+	time int
 }
