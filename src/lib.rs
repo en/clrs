@@ -23,6 +23,18 @@ mod test_cases {
          ([6, 5, 4, 3, 2, 1], [1, 2, 3, 4, 5, 6]),
          ([74, 59, 238, -784, 9845, 959, 905, 0, 0, 42, 7586, -5467984, 7586],
           [-5467984, -784, 0, 0, 42, 59, 74, 238, 905, 959, 7586, 7586, 9845]));
+    pub static SEARCH: [i32; 5] = [1, 2, 3, 4, 5];
+    pub struct SearchV {
+        pub v: i32,
+        pub r: Result<usize, i32>,
+    }
+    pub static SEARCH_RESULT: [SearchV; 7] = [SearchV { v: 0, r: Err(-1) },
+                                              SearchV { v: 1, r: Ok(0) },
+                                              SearchV { v: 2, r: Ok(1) },
+                                              SearchV { v: 3, r: Ok(2) },
+                                              SearchV { v: 4, r: Ok(3) },
+                                              SearchV { v: 5, r: Ok(4) },
+                                              SearchV { v: 6, r: Err(-1) }];
 }
 
 mod ch01;
