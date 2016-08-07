@@ -6,6 +6,7 @@ pub mod binary_add;
 pub mod selection_sort;
 pub mod merge_sort;
 pub mod binary_search;
+pub mod bubblesort;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Value<T> {
