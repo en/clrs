@@ -3,6 +3,7 @@ use std::cmp;
 pub mod insertion_sort;
 pub mod linear_search;
 pub mod binary_add;
+pub mod selection_sort;
 pub mod merge_sort;
 pub mod binary_search;
 
