@@ -13,7 +13,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn addition() {
+    fn test_binary_add() {
         let a = [0, 0, 0, 1, 1, 1, 0];
         let b = [1, 0, 1, 1, 0, 0, 1];
         let mut c: [i8; 8] = [0; 8];

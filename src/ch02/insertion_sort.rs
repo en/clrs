@@ -1,5 +1,5 @@
 use std::cmp;
-use super::merge_sort::Value;
+use super::Value;
 
 pub fn iterative_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>]) {
     if a.len() < 2 {
@@ -46,8 +46,8 @@ mod tests {
     use ::test_cases;
 
     #[test]
-    fn iterative() {
-        macro_rules! iterative {
+    fn test_iterative_insertion_sort() {
+        macro_rules! test {
             ( $( $i:tt ),* ) => {{
                 $(
                     let (mut a, want) = test_cases::SORT.$i;
@@ -56,12 +56,12 @@ mod tests {
                 )*
             }};
         }
-        iterative!(0, 1, 2, 3, 4, 5, 6, 7);
+        test!(0, 1, 2, 3, 4, 5, 6, 7);
     }
 
     #[test]
-    fn recursive() {
-        macro_rules! recursive {
+    fn test_recursive_insertion_sort() {
+        macro_rules! test {
             ( $( $i:tt ),* ) => {{
                 $(
                     let (mut a, want) = test_cases::SORT.$i;
@@ -71,6 +71,6 @@ mod tests {
                 )*
             }};
         }
-        recursive!(0, 1, 2, 3, 4, 5, 6, 7);
+        test!(0, 1, 2, 3, 4, 5, 6, 7);
     }
 }

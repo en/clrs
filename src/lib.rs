@@ -6,7 +6,7 @@ mod tests {
 
 #[cfg(test)]
 mod test_cases {
-    use ch02::merge_sort::Value;
+    use ch02::Value;
 
     // Thank God there are vim macros...
     pub static SORT: (([Value<char>; 8], [Value<char>; 8]),
