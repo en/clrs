@@ -1,6 +1,7 @@
 use std::cmp;
+use super::merge_sort::Value;
 
-pub fn iterative_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [T]) {
+pub fn iterative_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>]) {
     if a.len() < 2 {
         return;
     }
@@ -21,7 +22,7 @@ pub fn iterative_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [T]) {
     }
 }
 
-pub fn recursive_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [T], n: usize) {
+pub fn recursive_insertion_sort<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>], n: usize) {
     if n < 2 {
         return;
     }
