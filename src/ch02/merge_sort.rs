@@ -64,7 +64,6 @@ pub fn merge<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>], p: usize, q: usize, 
     let mut right: Vec<Value<T>> = Vec::with_capacity(n2 + 1);
     left.extend_from_slice(&a[p..p + n1]);
     right.extend_from_slice(&a[q + 1..q + 1 + n2]);
-    println!("left: {}, n1: {}, p: {}", left.len(), n1, p);
     left.push(Value::Infinity);
     right.push(Value::Infinity);
     let mut i: usize = 0;
