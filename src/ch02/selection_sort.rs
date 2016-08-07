@@ -1,7 +1,9 @@
 use std::cmp;
 use super::Value;
 
-pub fn selection_sort<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>]) {
+pub fn selection_sort<T>(a: &mut [Value<T>])
+    where T: cmp::PartialOrd + Copy
+{
     let n = a.len();
     if n < 2 {
         return;

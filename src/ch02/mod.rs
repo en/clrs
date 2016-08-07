@@ -16,7 +16,9 @@ pub enum Value<T> {
     Infinity,
 }
 
-impl<T: cmp::PartialOrd + Copy> PartialEq for Value<T> {
+impl<T> PartialEq for Value<T>
+    where T: cmp::PartialOrd + Copy
+{
     fn eq(&self, other: &Value<T>) -> bool {
         if let Value::NegInfinity = *self {
             if let Value::NegInfinity = *other {
@@ -37,7 +39,9 @@ impl<T: cmp::PartialOrd + Copy> PartialEq for Value<T> {
     }
 }
 
-impl<T: cmp::PartialOrd + Copy> PartialOrd for Value<T> {
+impl<T> PartialOrd for Value<T>
+    where T: cmp::PartialOrd + Copy
+{
     fn partial_cmp(&self, other: &Value<T>) -> Option<cmp::Ordering> {
         match *self {
             Value::NegInfinity => {
@@ -76,14 +80,14 @@ mod tests {
         let c = Value::Infinity;
         let d = Value::Some(1);
         let e = Value::Some(2);
-        assert_eq!(a == a, true);
-        assert_eq!(b == b, true);
-        assert_eq!(b == d, true);
-        assert_eq!(c == c, true);
-        assert_eq!(a != b, true);
-        assert_eq!(a != c, true);
-        assert_eq!(c != b, true);
-        assert_eq!(b != e, true);
+        assert!(a == a);
+        assert!(b == b);
+        assert!(b == d);
+        assert!(c == c);
+        assert!(a != b);
+        assert!(a != c);
+        assert!(c != b);
+        assert!(b != e);
     }
 
     #[test]
@@ -93,13 +97,13 @@ mod tests {
         let c = Value::Infinity;
         let d = Value::Some(1);
         let e = Value::Some(2);
-        assert_eq!(a < b, true);
-        assert_eq!(b < c, true);
-        assert_eq!(a < c, true);
-        assert_eq!(a <= b, true);
-        assert_eq!(b <= c, true);
-        assert_eq!(a <= c, true);
-        assert_eq!(b < e, true);
-        assert_eq!(b <= d, true);
+        assert!(a < b);
+        assert!(b < c);
+        assert!(a < c);
+        assert!(a <= b);
+        assert!(b <= c);
+        assert!(a <= c);
+        assert!(b < e);
+        assert!(b <= d);
     }
 }

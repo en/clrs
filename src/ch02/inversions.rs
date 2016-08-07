@@ -2,10 +2,9 @@ use std::cmp;
 use std::vec::Vec;
 use super::Value;
 
-pub fn count_inversions<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>],
-                                                   p: usize,
-                                                   r: usize)
-                                                   -> usize {
+pub fn count_inversions<T>(a: &mut [Value<T>], p: usize, r: usize) -> usize
+    where T: cmp::PartialOrd + Copy
+{
     let mut inversions: usize = 0;
     if p < r {
         let q = (p + r) >> 1;
@@ -16,11 +15,9 @@ pub fn count_inversions<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>],
     inversions
 }
 
-pub fn merge_inversions<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>],
-                                                   p: usize,
-                                                   q: usize,
-                                                   r: usize)
-                                                   -> usize {
+pub fn merge_inversions<T>(a: &mut [Value<T>], p: usize, q: usize, r: usize) -> usize
+    where T: cmp::PartialOrd + Copy
+{
     let n1 = q - p + 1;
     let n2 = r - q;
     let mut left: Vec<Value<T>> = Vec::with_capacity(n1 + 1);
