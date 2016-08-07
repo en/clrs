@@ -7,6 +7,7 @@ pub mod selection_sort;
 pub mod merge_sort;
 pub mod binary_search;
 pub mod bubblesort;
+pub mod inversions;
 
 #[derive(Debug, Copy, Clone)]
 pub enum Value<T> {

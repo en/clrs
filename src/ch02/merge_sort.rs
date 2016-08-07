@@ -26,7 +26,7 @@ pub fn merge<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>], p: usize, q: usize, 
 
 pub fn merge_sort<T: cmp::PartialOrd + Copy>(a: &mut [Value<T>], p: usize, r: usize) {
     if p < r {
-        let q = (p + r) / 2;
+        let q = (p + r) >> 1;
         merge_sort(a, p, q);
         merge_sort(a, q + 1, r);
         merge(a, p, q, r);
